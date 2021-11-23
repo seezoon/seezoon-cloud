@@ -1,0 +1,10 @@
+grpc:
+  server:
+    port: 9090
+  client:
+    stubs:
+      - name: aa
+        clazz: com.seezoon.grpc.demo.HelloWorldGrpc.HelloWorldStub
+    channels:
+      - target: 11
+    a: 10
