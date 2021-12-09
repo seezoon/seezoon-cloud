@@ -1,6 +1,5 @@
 package com.seezoon.grpc.autoconfigure;
 
-import com.seezoon.grpc.client.ConfigurationGrpcClientDiscovery;
 import com.seezoon.grpc.client.GrpcClientBeanPostProcessor;
 import com.seezoon.grpc.client.GrpcClientDefinition;
 import com.seezoon.grpc.client.GrpcClientDiscovery;
@@ -20,13 +19,9 @@ import org.springframework.context.annotation.Configuration;
 public class GrpcClientAutoConfiguration {
 
     @Bean
-    public GrpcClientDiscovery grpcClientDiscovery(GrpcClientProperties grpcClientProperties) {
-        return new ConfigurationGrpcClientDiscovery(grpcClientProperties);
-    }
-
-    @Bean
     public GrpcClientBeanPostProcessor grpcClientBeanPostProcessor(ApplicationContext applicationContext,
-            GrpcClientDiscovery grpcClientDiscovery) {
+            GrpcClientProperties grpcClientProperties) {
+        GrpcClientDiscovery grpcClientDiscovery = new GrpcClientDiscovery(grpcClientProperties, applicationContext);
         List<GrpcClientDefinition> grpcClientDefinitions = grpcClientDiscovery.getGrpcClientDefinitions();
         registerBean((BeanDefinitionRegistry) applicationContext, grpcClientDefinitions);
         return new GrpcClientBeanPostProcessor(applicationContext);

@@ -21,15 +21,13 @@ public class GrpcStubFactory {
 
     private static final Map<Class<?>, Method> GRPC_STUB_METHODS = new ConcurrentHashMap<>();
 
-    public static <T> Method getMethod(Class<T> clazz) throws NoSuchMethodException {
+    public synchronized static <T> Method getMethod(Class<T> clazz) throws NoSuchMethodException {
         Method cachedMethod = GRPC_STUB_METHODS.get(clazz);
         if (null == cachedMethod) {
-            synchronized (clazz) {
-                Class<?> enclosingClass = clazz.getEnclosingClass();
-                for (String stubMethodName : STUB_METHOD_NAMES) {
-                    Method method = enclosingClass.getDeclaredMethod(stubMethodName, Channel.class);
-                    GRPC_STUB_METHODS.put(method.getReturnType(), method);
-                }
+            Class<?> enclosingClass = clazz.getEnclosingClass();
+            for (String stubMethodName : STUB_METHOD_NAMES) {
+                Method method = enclosingClass.getDeclaredMethod(stubMethodName, Channel.class);
+                GRPC_STUB_METHODS.put(method.getReturnType(), method);
             }
         }
         return GRPC_STUB_METHODS.get(clazz);

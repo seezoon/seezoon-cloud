@@ -17,7 +17,7 @@ import org.springframework.context.ApplicationContext;
 
 @SpringBootTest
 @SpringBootApplication
-class AnnotationGrpcServiceDiscoveryTest {
+class GrpcServiceDiscoveryTest {
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -31,8 +31,7 @@ class AnnotationGrpcServiceDiscoveryTest {
 
     @Test
     void findGrpcServices() throws IOException, InterruptedException {
-        AnnotationGrpcServiceDiscovery grpcServiceDiscovery = new AnnotationGrpcServiceDiscovery();
-        grpcServiceDiscovery.setApplicationContext(applicationContext);
+        GrpcServiceDiscovery grpcServiceDiscovery = new GrpcServiceDiscovery(applicationContext);
         List<GrpcServiceDefinition> grpcServices = grpcServiceDiscovery.findGrpcServices();
         Assertions.assertTrue(grpcServices.size() == 1);
         NettyServerBuilder nettyServerBuilder = NettyServerBuilder.forPort(grpcServerProperties.getPort());
