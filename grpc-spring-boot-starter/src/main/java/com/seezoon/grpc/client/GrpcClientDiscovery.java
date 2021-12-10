@@ -10,10 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
-import org.springframework.util.Assert;
 
 /**
  * discover grpc client by configuration
@@ -27,23 +27,27 @@ public class GrpcClientDiscovery {
 
     public List<GrpcClientDefinition> getGrpcClientDefinitions() {
         List<StubProperties> stubs = grpcClientProperties.getStubs();
-        Map<String, ChannelProperties> channels = grpcClientProperties.getChannels();
         List<GrpcClientDefinition> definitions = new ArrayList<>();
-        GrpcChannelFactory grpcChannelFactory = new GrpcChannelFactory(applicationContext);
+        GrpcChannelFactory grpcChannelFactory = new GrpcChannelFactory(applicationContext, grpcClientProperties);
         for (StubProperties stub : stubs) {
             String channelName = Objects.requireNonNull(stub.getChannel(), "stub channel must not empty");
-            ChannelProperties channelProperties = channels.get(channelName);
-            Assert.notNull(channelProperties, "can not find channel:" + stub.getChannel());
             // create channel
-            Channel channel = grpcChannelFactory.create(channelName, channelProperties);
+            Channel channel = grpcChannelFactory.get(channelName);
             AbstractStub abstractStub = GrpcStubFactory.create(stub.getClazz(), channel);
-            Duration timeout = channelProperties.getTimeout();
-            if (null != timeout) {
-                // 这个属性没法在channel上设置
-                abstractStub.withDeadlineAfter(timeout.toMillis(), TimeUnit.MILLISECONDS);
-            }
+            configureStub(channelName, abstractStub);
             definitions.add(new GrpcClientDefinition(stub.getClazz(), stub.getClazz().getName(), abstractStub));
         }
         return definitions;
+    }
+
+    private void configureStub(String channelName, AbstractStub abstractStub) {
+        Map<String, ChannelProperties> channels = grpcClientProperties.getChannels();
+        ChannelProperties channelProperties = channels.get(channelName);
+        Duration timeout = Optional.ofNullable(channelProperties.getTimeout())
+                .orElse(grpcClientProperties.getCommon().getTimeout());
+        if (null != timeout) {
+            // 这个属性没法在channel上设置
+            abstractStub.withDeadlineAfter(timeout.toMillis(), TimeUnit.MILLISECONDS);
+        }
     }
 }

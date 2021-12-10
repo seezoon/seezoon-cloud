@@ -15,6 +15,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "grpc.client")
 public class GrpcClientProperties {
 
+    private CommonProperties common = new CommonProperties();
+
     private Map<String, ChannelProperties> channels = Collections.EMPTY_MAP;
 
     private List<StubProperties> stubs = Collections.EMPTY_LIST;
@@ -46,6 +48,20 @@ public class GrpcClientProperties {
 
         private String channel;
         private Class<? extends AbstractStub> clazz;
+    }
+
+    /**
+     * 公共属性，ChannelProperties 如果有的话，已ChannelProperties未准
+     */
+    @Getter
+    @Setter
+    public static class CommonProperties {
+
+        private Duration shutdownAwait;
+        private Duration timeout;
+        @SuppressWarnings("unchecked")
+        private List<Class<? extends ClientInterceptor>> interceptors = Collections.EMPTY_LIST;
+
     }
 
 }

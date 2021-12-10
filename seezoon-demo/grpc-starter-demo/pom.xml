@@ -11,20 +11,20 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>grpc-starter</artifactId>
+    <artifactId>grpc-starter-demo</artifactId>
     <packaging>pom</packaging>
 
     <modules>
-        <module>client</module>
-        <module>stub</module>
-        <module>server</module>
+        <module>client-demo</module>
+        <module>stub-demo</module>
+        <module>server-demo</module>
     </modules>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>com.seezoon</groupId>
-                <artifactId>stub</artifactId>
+                <artifactId>stub-demo</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

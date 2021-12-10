@@ -7,11 +7,11 @@
 
     <parent>
         <groupId>com.seezoon</groupId>
-        <artifactId>grpc-starter</artifactId>
+        <artifactId>grpc-starter-demo</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>client</artifactId>
+    <artifactId>client-demo</artifactId>
 
     <dependencies>
         <dependency>
@@ -20,7 +20,7 @@
         </dependency>
         <dependency>
             <groupId>com.seezoon</groupId>
-            <artifactId>stub</artifactId>
+            <artifactId>stub-demo</artifactId>
         </dependency>
     </dependencies>
 </project>

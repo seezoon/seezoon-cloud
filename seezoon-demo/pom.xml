@@ -10,7 +10,7 @@
     </parent>
 
     <modules>
-        <module>grpc-starter</module>
+        <module>grpc-starter-demo</module>
     </modules>
 
     <artifactId>seezoon-demo</artifactId>

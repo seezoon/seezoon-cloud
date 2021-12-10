@@ -5,6 +5,7 @@ import com.seezoon.helloworld.HelloWorldGrpc.HelloWorldStub;
 import com.seezoon.helloworld.HelloWorldRequest;
 import com.seezoon.helloworld.HelloWorldResponse;
 import io.grpc.stub.StreamObserver;
+import java.io.IOException;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -15,7 +16,7 @@ class ClientApplicationTest {
     private HelloWorldStub helloWorldStub;
 
     @Test
-    public void testSay() throws InterruptedException {
+    public void testSay() throws IOException {
         helloWorldStub
                 .say(HelloWorldRequest.newBuilder().setName("df").build(), new StreamObserver<HelloWorldResponse>() {
                     @Override
@@ -33,6 +34,6 @@ class ClientApplicationTest {
                         System.out.println("onCompleted");
                     }
                 });
-        Thread.sleep(2000);
+        System.in.read();
     }
 }
