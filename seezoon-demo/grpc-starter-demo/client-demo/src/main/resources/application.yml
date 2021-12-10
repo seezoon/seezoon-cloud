@@ -6,3 +6,7 @@ grpc:
     stubs:
       - clazz: com.seezoon.helloworld.HelloWorldGrpc.HelloWorldStub
         channel: hello_world_server
+      - clazz: com.seezoon.helloworld.HelloWorldGrpc.HelloWorldBlockingStub
+        channel: hello_world_server
+      - clazz: com.seezoon.helloworld.HelloWorldGrpc.HelloWorldFutureStub
+        channel: hello_world_server

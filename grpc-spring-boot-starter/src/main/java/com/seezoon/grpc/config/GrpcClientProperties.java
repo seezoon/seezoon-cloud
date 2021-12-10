@@ -15,6 +15,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "grpc.client")
 public class GrpcClientProperties {
 
+    /**
+     * 公共属性配置
+     */
     private CommonProperties common = new CommonProperties();
 
     private Map<String, ChannelProperties> channels = Collections.EMPTY_MAP;
