@@ -74,7 +74,8 @@ public class GrpcServerLifecycle implements SmartLifecycle {
 
     @Override
     public void stop(Runnable callback) {
-
+        stop();
+        callback.run();
     }
 
     @Override

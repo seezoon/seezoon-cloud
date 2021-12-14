@@ -50,7 +50,7 @@ public class GrpcChannelFactory {
                         }
                     }
                 }
-                log.info("client shut down");
+                log.info("client shutdown success");
             }
         });
     }

@@ -50,6 +50,7 @@ public class GrpcClientProperties {
     public static class StubProperties {
 
         private String channel;
+        @SuppressWarnings("unchecked")
         private Class<? extends AbstractStub> clazz;
     }
 
