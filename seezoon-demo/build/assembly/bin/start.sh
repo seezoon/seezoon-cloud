@@ -50,9 +50,9 @@ fi
 echo "SERVER_OTPS=${SERVER_OTPS}"
 
 if [ "${IN_CONTAINER}" = true ]; then
-  $RUN_JAVA -jar "${JAVA_OPTS}" "${ROOT}"/bin/"${APP_NAME}"*.jar ${SERVER_OTPS} >logs/catalina.out 2>&1
+  $RUN_JAVA -jar ${JAVA_OPTS} "${ROOT}"/bin/"${APP_NAME}"*.jar ${SERVER_OTPS} >logs/catalina.out 2>&1
 else
-  nohup "$RUN_JAVA" -jar "${JAVA_OPTS}" "${ROOT}"/bin/"${APP_NAME}"*.jar ${SERVER_OTPS} >logs/catalina.out 2>&1 &
+  nohup "$RUN_JAVA" -jar ${JAVA_OPTS} "${ROOT}"/bin/"${APP_NAME}"*.jar ${SERVER_OTPS} >logs/catalina.out 2>&1 &
 fi
 sleep 10
 ./bin/check.sh

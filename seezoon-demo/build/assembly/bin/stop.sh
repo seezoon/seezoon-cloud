@@ -11,7 +11,7 @@ pid=0
 #优雅关机等待时间
 waitSeconds=${waitSeconds:=30}
 checkpid() {
-  pid=$(ps -ef | grep "${ROOT}"/bin/"${APP_NAME}" | grep -v grep | awk '{print $2}')
+  pid=$(ps -ef | grep "${ROOT}/bin/${APP_NAME}" | grep -v grep | awk '{print $2}')
   pid=${pid:=0}
 }
 

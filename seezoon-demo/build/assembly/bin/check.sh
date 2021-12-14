@@ -8,7 +8,7 @@ cd $ROOT
 APP_NAME="${ROOT##*/}"
 pid=0
 checkpid() {
-  pid=$(ps -ef | grep ${ROOT}/bin/${APP_NAME} | grep -v grep | awk '{print $2}')
+  pid=$(ps -ef | grep "${ROOT}/bin/${APP_NAME}" | grep -v grep | awk '{print $2}')
   pid=${pid:=0}
 }
 checkpid
