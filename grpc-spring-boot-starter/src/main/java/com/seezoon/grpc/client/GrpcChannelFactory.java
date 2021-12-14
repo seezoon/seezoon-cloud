@@ -32,6 +32,9 @@ public class GrpcChannelFactory {
         Runtime.getRuntime().addShutdownHook(new Thread() {
             @Override
             public void run() {
+                if (channels.isEmpty()) {
+                    return;
+                }
                 // Use stderr here since the logger may have been reset by its JVM shutdown hook.
                 log.info("*** shutting down gRPC server since JVM is shutting down");
                 for (Entry<String, ChannelDefinition> entry : channels.entrySet()) {
