@@ -22,8 +22,6 @@ kind create cluster --image=xxx
 推荐下面的方式
 
 ```yaml
-# 创建多个worker节点 比较接近真实环境  https://kind.sigs.k8s.io/docs/user/quick-start/#configuring-your-kind-cluster
-  kind create cluster --config kind-config.yaml
 # kind-config.yaml
 kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
@@ -31,6 +29,11 @@ nodes:
   - role: control-plane
   - role: worker
   - role: worker
+```
+
+```shell
+# 创建多个worker节点 比较接近真实环境  https://kind.sigs.k8s.io/docs/user/quick-start/#configuring-your-kind-cluster
+kind create cluster --config kind-config.yaml
 ```
 
 <pre>
@@ -52,11 +55,15 @@ docker network create -d=bridge --subnet=172.19.0.0/24 kind
 https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/#install-kubectl-binary-with-curl-on-linux
 ```
 
-## kubectl 查看集群
+## kubectl [访问集群](https://kubernetes.io/zh/docs/tasks/access-application-cluster/access-cluster/)
 
 ```shell
-# kind- 是前缀，kind是默认kind集群的名字
+# 切换集群 kind- 是前缀，kind是默认kind集群的名字
 kubectl cluster-info --context kind-kind
+# 查看集群信息
+kubectl cluster-info
+# 查看集群配置 
+kubectl config view
 
 ```
 
@@ -67,23 +74,6 @@ kubectl cluster-info --context kind-kind
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.2.0/aio/deploy/recommended.yaml
 # 打开dashboard 代理端口
 kubectl proxy &
-```
-
-## 安装nginx访问dashboard
-
-```shell
-# https://hub.docker.com/_/nginx?tab=description
-docker pull nginx
-# 不用-p 映射80端口，host 模式下自动使用dockerfile 中expose 的端口
-docker create --name nginx --network host -v /data/nginx:/etc/nginx/conf.d nginx
-docker start nginx
-# 或者一步到位
-docker run --name nginx --network host -v /data/nginx:/etc/nginx/conf.d nginx -d
-# 有问题可以进去看看里面有nginx的样本配置
-# https://github.com/nginx/nginx/blob/master/conf/nginx.conf
-docker exec -it nginx bash 
-# 查看日志
-docker logs [-f] nginx 
 ```
 
 ### nginx conf
@@ -121,7 +111,25 @@ server {
   }
 ```
 
-### token 访问
+### 安装nginx
+
+```shell
+# https://hub.docker.com/_/nginx?tab=description
+docker pull nginx
+# 不用-p 映射80端口，host 模式下自动使用dockerfile 中expose 的端口
+docker create --name nginx --network host -v /data/nginx:/etc/nginx/conf.d nginx
+# 等nginx的配置处理好了再启动，因为没有默认配置文件，他内部会生成一个默认的且无法覆盖
+docker start nginx
+# 或者一步到位(需要先把nginx的配置正好)
+docker run --name nginx --network host -v /data/nginx:/etc/nginx/conf.d nginx -d
+# 有问题可以进去看看里面有nginx的样本配置
+# https://github.com/nginx/nginx/blob/master/conf/nginx.conf
+docker exec -it nginx bash 
+# 查看日志
+docker logs [-f] nginx 
+```
+
+## token 访问
 
 > 新版dashboard 默认不允许匿名访问，可以选择创建创号或者使用默认的
 
