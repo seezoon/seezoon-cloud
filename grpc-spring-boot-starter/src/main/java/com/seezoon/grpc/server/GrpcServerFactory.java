@@ -8,9 +8,11 @@ import io.grpc.netty.shaded.io.grpc.netty.NettyServerBuilder;
 import java.net.InetSocketAddress;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
 
+@Slf4j
 @RequiredArgsConstructor
 public class GrpcServerFactory {
 
@@ -48,6 +50,8 @@ public class GrpcServerFactory {
         if (null != serviceDefinitions) {
             for (GrpcServiceDefinition serviceDefinition : serviceDefinitions) {
                 builder.addService(serviceDefinition.getDefinition());
+                log.info("register grpc service bean name[{}],class[{}]", serviceDefinition.getBeanName(),
+                        serviceDefinition.getBeanClazz().getName());
             }
         }
     }

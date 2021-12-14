@@ -10,12 +10,16 @@
     </parent>
 
     <modules>
-        <module>grpc-starter-demo</module>
+        <module>client-demo</module>
+        <module>stub-demo</module>
+        <module>server-demo</module>
     </modules>
 
     <artifactId>seezoon-demo</artifactId>
     <packaging>pom</packaging>
-
+    <properties>
+        <spring.boot.version>2.6.0</spring.boot.version>
+    </properties>
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -23,7 +27,46 @@
                 <artifactId>grpc-spring-boot-starter</artifactId>
                 <version>${project.parent.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.seezoon</groupId>
+                <artifactId>stub-demo</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring.boot.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${maven-jar-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>${maven-assembly-plugin.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 
 </project>
