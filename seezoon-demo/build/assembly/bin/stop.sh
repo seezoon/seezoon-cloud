@@ -4,7 +4,7 @@ ROOT=$(
   cd $(dirname $0)/..
   pwd
 )
-cd ${ROOT}
+cd "${ROOT}"
 
 APP_NAME="${ROOT##*/}"
 pid=0
