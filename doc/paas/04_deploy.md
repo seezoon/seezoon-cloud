@@ -40,14 +40,14 @@ kubectl label node kind-worker10 application=monitor
 2 、用kind需要load 镜像
 
 ```shell
-kind load docker-image xx:tag
+kind load docker-image xx:tag xx2:tag
 ```
 
-## 部署server-demo
+## 部署
 
 ```shell
 # 创建或者便捷都是
-kubectl apply -f  deployment.yaml
+kubectl apply -f  config_map.yaml deployment.yaml service.yaml
 # 删除
 kubectl delete -f  deployment.yaml
 # 按名字删除 ,其他工作负载类似
