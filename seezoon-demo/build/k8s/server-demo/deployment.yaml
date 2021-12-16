@@ -18,5 +18,6 @@ spec:
       containers:
         - name: server-demo
           image: server-demo:1.0.0-SNAPSHOT
+          imagePullPolicy: Always
       nodeSelector:
         application: server

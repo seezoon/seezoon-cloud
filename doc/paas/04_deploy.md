@@ -33,4 +33,26 @@ kubectl label node kind-worker9 application=monitor
 kubectl label node kind-worker10 application=monitor
 ```
 
+## k8s 公共知识
+
+1、metadata 决定一个资源的唯一性
+
+2 、用kind需要load 镜像
+
+```shell
+kind load docker-image xx:tag
+```
+
 ## 部署server-demo
+
+```shell
+# 创建或者便捷都是
+kubectl apply -f  deployment.yaml
+# 删除
+kubectl delete -f  deployment.yaml
+# 按名字删除 ,其他工作负载类似
+kubectl get deployment|pod|service -n namespace
+kubectl delete  deployment|pod|service name -n namespace
+
+
+```

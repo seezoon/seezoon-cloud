@@ -1,0 +1,5 @@
+spring:
+  profiles:
+    active: prod
+logging:
+  config: conf/logback-spring.xml

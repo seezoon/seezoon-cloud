@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: seezoon-cloud
+  name: server-demo-service
+spec:
+  type: ClusterIP
+  selector:
+    app: server-demo
+    version: v1
+  ports:
+    - port: 80
+      targetPort: 9000
+
