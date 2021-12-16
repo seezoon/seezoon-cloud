@@ -10,5 +10,4 @@ spec:
     version: v1
   ports:
     - port: 80
-      targetPort: 9000
-
+      targetPort: 80

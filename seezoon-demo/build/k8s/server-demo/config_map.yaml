@@ -1,0 +1,55 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: seezoon-cloud
+  name: server-demo-config
+data:
+  application.yml: |-
+    spring:
+      profiles:
+        active: prod
+    logging:
+      config: conf/logback-spring.xml
+    grpc:
+      server:
+        port: 80
+  logback-spring.xml: |-
+    <?xml version="1.0" encoding="UTF-8" ?>
+    <configuration scan="true" scanPeriod="60 seconds" debug="false">
+        <property name="LOG_HOME" value="./logs"/>
+        <property name="LOG_FILE" value="seezoon"/>
+        <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%X{tid}] %-5level %logger{10} - %msg%n"/>
+        <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>${LOG_PATTERN}</pattern>
+                <charset>UTF-8</charset>
+            </encoder>
+        </appender>
+        <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <!-- 指定日志文件的名称 -->
+            <file>${LOG_HOME}/${LOG_FILE}.log</file>
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>${LOG_HOME}/${LOG_FILE}.log.%d{yyyy-MM-dd}-%i</fileNamePattern>
+                <maxHistory>10</maxHistory>
+                <maxFileSize>2048MB</maxFileSize>
+                <totalSizeCap>10GB</totalSizeCap>
+            </rollingPolicy>
+            <encoder>
+                <pattern>${LOG_PATTERN}</pattern>
+                <charset>UTF-8</charset>
+            </encoder>
+        </appender>
+        <appender name="AsyncFile" class="ch.qos.logback.classic.AsyncAppender">
+            <discardingThreshold>0</discardingThreshold>
+            <queueSize>10000</queueSize>
+            <appender-ref ref="FILE"/>
+        </appender>
+        <logger name="com.zaxxer.hikari.HikariConfig" level="DEBUG"/>
+        <root level="INFO">
+            <appender-ref ref="AsyncFile"/>
+        </root>
+    </configuration>
+  setenv.sh: |-
+    JVM_MEM="-XX:+UseContainerSupport -XX:InitialRAMPercentage=10.0 -XX:MaxRAMPercentage=80.0"
+    JAVA_OPTS="${JVM_MEM} -XX:AutoBoxCacheMax=2000 -XX:+UseG1GC -verbose:gc -Xlog:gc*,safepoint:./logs/gc.log:time,uptime:filecount=1,filesize=10M -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=./logs/dump"
+    SERVER_OTPS="--server.port=8080 --server.tomcat.basedir=. --server.tomcat.connection-timeout=5s --server.tomcat.max-connections=2000 --server.tomcat.accept-count=200 --server.tomcat.threads.min-spare=10 --server.tomcat.threads.max=500 --server.shutdown=graceful --spring.lifecycle.timeout-per-shutdown-phase=10s"

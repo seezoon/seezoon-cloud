@@ -15,9 +15,25 @@ spec:
         app: server-demo
         version: v1
     spec:
+      nodeSelector:
+        application: server
       containers:
         - name: server-demo
           image: server-demo:1.0.0-SNAPSHOT
-          imagePullPolicy: Always
-      nodeSelector:
-        application: server
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - mountPath: /data/server-demo/conf
+              name: config-volume
+      volumes:
+        - name: config-volume
+          configMap:
+            name: server-demo-config
+            items:
+              - key: application.yml
+                path: application.yml
+              - key: logback-spring.xml
+                path: logback-spring.xml
+              - key: setenv.sh
+                path: setenv.sh
+
+
