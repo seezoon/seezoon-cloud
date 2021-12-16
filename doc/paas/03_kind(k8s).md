@@ -29,6 +29,14 @@ nodes:
   - role: control-plane
   - role: worker
   - role: worker
+  - role: worker
+  - role: worker
+  - role: worker
+  - role: worker
+  - role: worker
+  - role: worker
+  - role: worker
+  - role: worker
 ```
 
 ```shell
@@ -73,7 +81,7 @@ kubectl config view
 # https://kubernetes.io/zh/docs/tasks/access-application-cluster/web-ui-dashboard/
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.2.0/aio/deploy/recommended.yaml
 # 打开dashboard 代理端口
-kubectl proxy &
+nohup kubectl proxy > /dev/null 2>&1 &
 ```
 
 ### nginx conf
