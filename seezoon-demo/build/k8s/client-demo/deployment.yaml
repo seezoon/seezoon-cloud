@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: seezoon-cloud
+  name: client-demo-deployment
+spec:
+  selector:
+    matchLabels:
+      app: client-demo
+      version: v1
+  replicas: 4
+  template:
+    metadata:
+      labels:
+        app: client-demo
+        version: v1
+    spec:
+      nodeSelector:
+        application: server
+      containers:
+        - name: client-demo
+          image: client-demo:1.0.0-SNAPSHOT
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - mountPath: /data/client-demo/conf
+              name: config-volume
+      volumes:
+        - name: config-volume
+          configMap:
+            name: client-demo-config
+            items:
+              - key: application.yml
+                path: application.yml
+              - key: logback-spring.xml
+                path: logback-spring.xml
+              - key: setenv.sh
+                path: setenv.sh
+
+

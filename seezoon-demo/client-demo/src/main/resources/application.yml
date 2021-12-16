@@ -1,8 +1,8 @@
+spring:
+  profiles:
+    active: local
 grpc:
   client:
-    channels:
-      hello_world_server:
-        target: 127.0.0.1:9000
     stubs:
       - clazz: com.seezoon.helloworld.HelloWorldGrpc.HelloWorldStub
         channel: hello_world_server

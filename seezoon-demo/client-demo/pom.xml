@@ -46,7 +46,7 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        <exclude>application-local.properties</exclude>
+                        <exclude>application-local.yml</exclude>
                         <exclude>logback-spring.xml</exclude>
                     </excludes>
                 </configuration>
