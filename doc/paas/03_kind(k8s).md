@@ -1,5 +1,6 @@
 # 安装
 
+kind 是已docker 容器模拟的node
 [安装手册](https://kind.sigs.k8s.io/docs/user/quick-start/)
 
 ## 安装步骤
@@ -80,7 +81,7 @@ kubectl config view
 ```shell
 # https://kubernetes.io/zh/docs/tasks/access-application-cluster/web-ui-dashboard/
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.2.0/aio/deploy/recommended.yaml
-# 打开dashboard 代理端口
+# 打开dashboard 代理端口，可以重复执行
 nohup kubectl proxy > /dev/null 2>&1 &
 ```
 

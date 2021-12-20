@@ -5,6 +5,7 @@ import com.seezoon.grpc.util.NettyEventLoopFactory;
 import io.grpc.Server;
 import io.grpc.ServerInterceptor;
 import io.grpc.netty.shaded.io.grpc.netty.NettyServerBuilder;
+import io.grpc.protobuf.services.ProtoReflectionService;
 import java.net.InetSocketAddress;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -48,6 +49,9 @@ public class GrpcServerFactory {
 
     private void configureService(NettyServerBuilder builder) {
         if (null != serviceDefinitions) {
+            if (grpcServerProperties.isSupportReflection()) {
+                builder.addService(ProtoReflectionService.newInstance());
+            }
             for (GrpcServiceDefinition serviceDefinition : serviceDefinitions) {
                 builder.addService(serviceDefinition.getDefinition());
                 log.info("register grpc service bean name[{}],class[{}]", serviceDefinition.getBeanName(),

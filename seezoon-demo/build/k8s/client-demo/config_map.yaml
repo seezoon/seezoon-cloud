@@ -8,6 +8,8 @@ data:
     spring:
       profiles:
         active: prod
+    server:
+      port: 8080
     logging:
       config: conf/logback-spring.xml
     grpc:

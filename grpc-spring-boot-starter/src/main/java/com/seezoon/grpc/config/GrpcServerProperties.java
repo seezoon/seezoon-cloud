@@ -15,6 +15,12 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class GrpcServerProperties {
 
     /**
+     * https://github.com/grpc/grpc-java/blob/master/documentation/server-reflection-tutorial.md
+     *
+     * Enable Server Reflection
+     */
+    private boolean supportReflection;
+    /**
      * 主机可以不配置
      */
     private String host;

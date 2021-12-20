@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: seezoon-cloud
+  name: server-ingress
+  annotations:
+    # 转发grpc 需要
+    nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
+    # https://github.com/kubernetes/ingress-nginx/blob/main/docs/examples/rewrite/README.md
+    # 转发到实际grpc的时候加 service/method，/hello 在client定义channel
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  # 如果集群中有多个kind=IngressClass,可以指定其名称
+  # ingressClassName:
+  rules:
+    - http:
+        paths:
+          - path: /hello(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: server-demo-service
+                port:
+                  number: 80
