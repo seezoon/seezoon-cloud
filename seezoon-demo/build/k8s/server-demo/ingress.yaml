@@ -1,21 +1,39 @@
+# 转发grpc 需要证书 需要SAN 证书比较麻烦
+# openssl > 1.1.1 https://gist.github.com/fernandoaleman/5459173e24d59b45ae2cfc618e20fe06
+# openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout tls.key -out tls.crt -addext 'subjectAltName=DNS:seezoon.com,DNS:server.seezoon.com'
+# kubectl create secret tls server-ingress-tls-secret --key tls.key --cert tls.crt -n seezoon-cloud
+# 内网负载后台grpc 的样例，做为外网网关类似
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   namespace: seezoon-cloud
   name: server-ingress
   annotations:
+    # https://kubernetes.github.io/ingress-nginx/user-guide/nginx-configuration/annotations/
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "10"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "10"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "10"
+    nginx.ingress.kubernetes.io/client-body-buffer-size: 10m
+    nginx.ingress.kubernetes.io/client_max_body_size: 10m
+    nginx.ingress.kubernetes.io/proxy-body-size: 10m
     # 转发grpc 需要
     nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
+    #nginx.ingress.kubernetes.io/ssl-redirect: "false"
     # https://github.com/kubernetes/ingress-nginx/blob/main/docs/examples/rewrite/README.md
-    # 转发到实际grpc的时候加 service/method，/hello 在client定义channel
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
-  # 如果集群中有多个kind=IngressClass,可以指定其名称
-  # ingressClassName:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - server.seezoon.com
+      secretName: server-ingress-tls-secret
   rules:
-    - http:
+    # 指定域名后一定要域名访问 不指定用ip 访问也可以的
+    - host: server.seezoon.com
+      http:
         paths:
-          - path: /hello(/|$)(.*)
+          # 这里是每个工程的公共proto的包
+          - path: /com.seezoon.helloworld(.*)
             pathType: Prefix
             backend:
               service:

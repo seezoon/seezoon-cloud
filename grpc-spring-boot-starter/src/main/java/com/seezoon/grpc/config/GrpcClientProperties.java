@@ -33,6 +33,10 @@ public class GrpcClientProperties {
          */
         private String target;
         /**
+         * tls 单向
+         */
+        private boolean security;
+        /**
          * 总超时时间
          */
         private Duration timeout;

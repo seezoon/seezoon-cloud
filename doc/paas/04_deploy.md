@@ -50,6 +50,10 @@ kubectl delete deployments|nodes|pods|services|rs|configMap name -n namespace
 kubectl edit deployments|nodes|pods|services|rs|configMap name -n namespace
 kubectl exec pod名称 -it -n 空间 -- bash(命令)
 kubectl logs podname [-f] -n 空间
+# 重启
+kubectl rollout  restart deployment|daemonset/name -n 空间
+# 临时测试下pod或service 中的端口
+kubectl port-forward pod|service/name -n 空间  --address 0.0.0.0 主机端口:pod或service端口
 ```
 
 ```shell
@@ -59,7 +63,7 @@ kind load docker-image xx:tag xx2:tag
 ## 部署
 
 ```shell
-# 创建或者便捷都是
+# 创建
 kubectl apply -f  config_map.yaml deployment.yaml service.yaml
 # 删除
 kubectl delete -f  deployment.yaml

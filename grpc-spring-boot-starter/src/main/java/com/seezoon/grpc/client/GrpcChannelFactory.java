@@ -6,6 +6,11 @@ import io.grpc.Channel;
 import io.grpc.ClientInterceptor;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import io.grpc.netty.shaded.io.grpc.netty.GrpcSslContexts;
+import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder;
+import io.grpc.netty.shaded.io.netty.handler.ssl.SslContext;
+import io.grpc.netty.shaded.io.netty.handler.ssl.SslContextBuilder;
+import io.grpc.netty.shaded.io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,6 +20,7 @@ import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import javax.net.ssl.SSLException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -66,9 +72,9 @@ public class GrpcChannelFactory {
     private ChannelDefinition create(String channelName) {
         ChannelProperties channelProperties = grpcClientProperties.getChannels().get(channelName);
         Assert.notNull(channelProperties, "can not find channel:" + channelName);
-        ManagedChannelBuilder<?> channelBuilder = ManagedChannelBuilder
+        NettyChannelBuilder channelBuilder = NettyChannelBuilder
                 .forTarget(Objects.requireNonNull(channelProperties.getTarget()));
-        configure(channelBuilder);
+        configure(channelProperties, channelBuilder);
         configureInterceptors(channelProperties, channelBuilder);
         ManagedChannel channel = channelBuilder.build();
         return new ChannelDefinition(channelName, channel, grpcClientProperties.getCommon().getShutdownAwait());
@@ -87,8 +93,20 @@ public class GrpcChannelFactory {
         channelBuilder.intercept(clientInterceptors);
     }
 
-    private void configure(ManagedChannelBuilder<?> channelBuilder) {
-        channelBuilder.usePlaintext();
+    private void configure(ChannelProperties channelProperties, NettyChannelBuilder channelBuilder) {
+        if (channelProperties.isSecurity()) {
+            SslContextBuilder sslContextBuilder = GrpcSslContexts.forClient()
+                    .trustManager(InsecureTrustManagerFactory.INSTANCE);
+            SslContext sslContext = null;
+            try {
+                sslContext = sslContextBuilder.build();
+            } catch (SSLException e) {
+                throw new RuntimeException(e);
+            }
+            channelBuilder.useTransportSecurity().sslContext(sslContext);
+        } else {
+            channelBuilder.usePlaintext();
+        }
     }
 
 
