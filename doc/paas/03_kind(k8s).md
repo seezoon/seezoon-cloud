@@ -78,6 +78,9 @@ kubectl config view
 
 ## 安装dashboard
 
+> 这里选择比较多，官方这个是最差的选择
+> 推荐Kuboard rancher kubesphere 都很优秀
+
 ```shell
 # https://kubernetes.io/zh/docs/tasks/access-application-cluster/web-ui-dashboard/
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.2.0/aio/deploy/recommended.yaml
