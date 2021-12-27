@@ -42,7 +42,7 @@ kubectl label node kind-worker10 application=monitor
 3、常用命令
 
 ```shell
-# 部门缩写 个人习惯全写免得混淆 deployments == deploy nodes == no services == svc
+# 支持缩写 个人习惯全写免得混淆 deployments == deploy nodes == no services == svc
 kubectl get all -n namespace
 kubectl get deployments|nodes|pods|services|rs|configMap [name]  [-A 全部空间] [-n 指定空间] -o wide [--show-labels 展示标签] 
 kubectl describe deployments|nodes|pods|services|rs|configMap  name -n 空间
@@ -50,6 +50,8 @@ kubectl delete deployments|nodes|pods|services|rs|configMap name -n namespace
 kubectl edit deployments|nodes|pods|services|rs|configMap name -n namespace
 kubectl exec pod名称 -it -n 空间 -- bash(命令)
 kubectl logs podname [-f] -n 空间
+# 重建
+kubectl get pod mypod -o yaml -n 空间  | kubectl replace -f -
 # 重启
 kubectl rollout  restart deployment|daemonset/name -n 空间
 # 临时测试下pod或service 中的端口
